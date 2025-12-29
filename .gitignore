@@ -17,3 +17,5 @@ cmd/students-api/main.go
 
 # IDE specific files (VS Code)
 .vscode/
+
+storage
