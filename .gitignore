@@ -19,3 +19,4 @@ cmd/students-api/main.go
 .vscode/
 
 storage
+config
