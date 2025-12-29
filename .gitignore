@@ -1,0 +1,19 @@
+cmd/students-api/main.go
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+
+# Dependency directories (optional, usually not needed if using go modules)
+# vendor/
+
+# IDE specific files (VS Code)
+.vscode/
