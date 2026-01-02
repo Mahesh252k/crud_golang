@@ -82,7 +82,7 @@ func GetAll(storage storage.Storage) http.HandlerFunc {
 
 		student, err := storage.GetAllStudents()
 		if err != nil {
-			response.WriteJson(w, http.StatusInternalServerError, err)
+			response.WriteJson(w, http.StatusInternalServerError, response.GeneralError(err))
 			return
 		}
 		response.WriteJson(w, http.StatusOK, student)

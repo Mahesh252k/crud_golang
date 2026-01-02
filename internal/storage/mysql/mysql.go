@@ -79,23 +79,16 @@ func (s *Mysql) GetStudentById(id int64) (types.Student, error) {
 
 // GetAllStudents implents the storage.Storage interface
 func (s *Mysql) GetAllStudents() ([]types.Student, error) {
-	stmt, err := s.Db.Prepare("SELECT id, name, email, age FROM students")
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	rows, err := stmt.Query()
+	rows, err := s.Db.Query("SELECT id, name, email, age FROM students")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var students []types.Student
+	students := []types.Student{}
 	for rows.Next() {
 		var student types.Student
-		err := rows.Scan(&student.Id, &student.Name, &student.Email, &student.Age)
-		if err != nil {
+		if err := rows.Scan(&student.Id, &student.Name, &student.Email, &student.Age); err != nil {
 			return nil, err
 		}
 		students = append(students, student)
