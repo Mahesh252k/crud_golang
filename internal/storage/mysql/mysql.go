@@ -2,10 +2,12 @@ package mysql
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/Mahesh252k/students-api/internal/config"
+	"github.com/Mahesh252k/students-api/internal/types"
 )
 
 type Mysql struct {
@@ -54,4 +56,23 @@ func (s *Mysql) CreateStudent(name string, email string, age int) (int64, error)
 	}
 
 	return id, nil
+}
+
+// GetById implements the storage.Storage interface
+func (s *Mysql) GetStudentById(id int64) (types.Student, error) {
+	query, err := s.Db.Prepare("SELECT ID, name, email, age FROM students WHERE id = ?")
+	if err != nil {
+		return types.Student{}, err
+	}
+	defer query.Close()
+
+	var student types.Student
+	query.QueryRow(id).Scan(&student.Id, &student.Name, &student.Email, &student.Age)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return types.Student{}, fmt.Errorf("student not found with id %s", fmt.Sprint(id))
+		}
+		return types.Student{}, err
+	}
+	return student, nil
 }

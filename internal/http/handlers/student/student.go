@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/Mahesh252k/students-api/internal/storage"
 	"github.com/Mahesh252k/students-api/internal/types"
@@ -35,7 +37,7 @@ func New(storage storage.Storage) http.HandlerFunc {
 			return
 		}
 
-		// 3. CALL THE DATABASE (This must be inside the func)
+		// 3. CALL THE DATABASE to create student
 		lastId, err := storage.CreateStudent(
 			student.Name,
 			student.Email,
@@ -52,5 +54,25 @@ func New(storage storage.Storage) http.HandlerFunc {
 			"success": "OK",
 			"id":      lastId,
 		})
+	}
+}
+
+func GetById(storage storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := r.PathValue("id")
+		slog.Info("GetById - getting a student", slog.String("id", id))
+
+		parsedId, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(fmt.Errorf("invalid id format")))
+			return
+		}
+		student, err := storage.GetStudentById(parsedId)
+		if err != nil {
+			slog.Error("GetById - failed to get student", slog.String("id", id))
+			response.WriteJson(w, http.StatusNotFound, response.GeneralError(err))
+			return
+		}
+		response.WriteJson(w, http.StatusOK, student)
 	}
 }
