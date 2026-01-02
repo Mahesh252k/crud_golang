@@ -7,14 +7,14 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/Mahesh252k/students-api/internal/storage"
 	"github.com/Mahesh252k/students-api/internal/types"
 	"github.com/Mahesh252k/students-api/internal/utils/response"
 	"github.com/go-playground/validator/v10"
 )
 
-func New() http.HandlerFunc {
+func New(storage storage.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		var student types.Student
 
 		err := json.NewDecoder(r.Body).Decode(&student)

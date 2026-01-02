@@ -1,5 +1,6 @@
 env: "dev"
-storage_Path: "storage/storage.db"
+# Replace @ with %40
+storage_Path: 'root:Mike%40Reddy25!@tcp(localhost:3306)/student_db'
 
 http_server:
   address: "localhost:8082"
